@@ -16,11 +16,12 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.LuminanceSource
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
+import com.google.zxing.PlanarYUVLuminanceSource
+import com.google.zxing.multi.qrcode.QRCodeMultiReader
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,6 +91,8 @@ class QrFragment : Fragment() {
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalyzer
                 )
+//            } catch (exc: com.google.zxing.NotFoundException) {
+//                // Ignore QR code not found
             } catch (exc: Exception) {
                 Log.e("QrFragment", "Binding failed", exc)
             }
@@ -99,7 +102,49 @@ class QrFragment : Fragment() {
 
     private class QrCodeAnalyzer(private val onQrCodeDetected: (String) -> Unit) : ImageAnalysis.Analyzer {
         override fun analyze(image: ImageProxy) {
-            TODO("Not yet implemented")
+//            if (image.format != ImageFormat.YUV_420_888) {
+//                image.close()
+//                Log.e("QrCodeAnalyzer","Incompatible image format: %d".format(image.format))
+//                return
+//            }
+
+            try {
+
+                val yBuffer = image.planes[0].buffer
+                val uBuffer = image.planes[1].buffer
+                val vBuffer = image.planes[2].buffer
+
+                val ySize = yBuffer.remaining()
+                val uSize = uBuffer.remaining()
+                val vSize = vBuffer.remaining()
+
+                val nv21 = ByteArray(ySize + uSize + vSize)
+
+                yBuffer.get(nv21, 0, ySize)
+                uBuffer.get(nv21, ySize + vSize, uSize)
+                vBuffer.get(nv21, ySize, vSize)
+
+                val source: LuminanceSource = PlanarYUVLuminanceSource(
+                    nv21,
+                    image.width,
+                    image.height,
+                    0, 0,
+                    image.width,
+                    image.height,
+                    false
+                )
+
+                val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+
+                val result = QRCodeMultiReader().decode(binaryBitmap)
+                onQrCodeDetected(result.text)
+            } catch (exc: com.google.zxing.NotFoundException) {
+                // Ignore QR code not found
+            } catch (e: Exception) {
+                Log.e("QrCodeAnalyzer", "Error analyzing QR code:", e)
+            } finally {
+                image.close()
+            }
         }
     }
 
