@@ -3,6 +3,7 @@ package com.example.warehouse
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import androidx.navigation.findNavController
 
 class QrActivity : AppCompatActivity() {
 

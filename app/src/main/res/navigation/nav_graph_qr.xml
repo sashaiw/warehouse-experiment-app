@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/QrFragment">
+
+    <fragment
+        android:id="@+id/QrFragment"
+        android:name="com.example.warehouse.QrFragment"
+        android:label="QR Scanner"
+        tools:layout="@layout/fragment_qr">
+
+        <action
+            android:id="@+id/action_QrFragment_to_SuccessFragment"
+            app:destination="@id/SuccessFragment" />
+
+        <action
+            android:id="@+id/action_QrFragment_to_FailureFragment"
+            app:destination="@id/FailureFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SuccessFragment"
+        android:name="com.example.warehouse.SuccessFragment"
+        android:label="Success"
+        tools:layout="@layout/fragment_success">
+
+        <action
+            android:id="@+id/action_SuccessFragment_to_QrFragment"
+            app:destination="@id/QrFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/FailureFragment"
+        android:name="com.example.warehouse.FailureFragment"
+        android:label="Failure"
+        tools:layout="@layout/fragment_failure">
+
+        <action
+            android:id="@+id/action_FailureFragment_to_QrFragment"
+            app:destination="@id/QrFragment" />
+    </fragment>
+</navigation>

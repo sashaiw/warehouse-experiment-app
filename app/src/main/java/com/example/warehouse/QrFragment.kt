@@ -14,6 +14,11 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.LuminanceSource
 import com.google.zxing.common.HybridBinarizer
@@ -25,8 +30,8 @@ import com.google.zxing.multi.qrcode.QRCodeMultiReader
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+//private const val ARG_PARAM1 = "param1"
+//private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -40,6 +45,8 @@ class QrFragment : Fragment() {
 
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var previewView: PreviewView
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var navController: NavController? = null
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
@@ -65,11 +72,30 @@ class QrFragment : Fragment() {
         startCamera()
     }
 
+    private fun onQrDetected(qrCode: String) {
+        Log.d("QrFragment", "QR found: $qrCode")
+
+        // navigate to different fragments depending on whether QR is correct
+//        requireActivity().runOnUiThread {
+            if (qrCode.contains("A")) {
+                stopCamera()
+                Log.d("QrFragment", "Navigating to success fragment")
+                findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+//                NavHostFragment.findNavController(this).navigate(R.id.action_QrFragment_to_SuccessFragment)
+
+            } else {
+                stopCamera()
+                Log.d("QrFragment", "Navigating to failure fragment")
+                findNavController().navigate(R.id.action_QrFragment_to_FailureFragment)
+//            }
+        }
+    }
+
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+            cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder()
                 .build()
                 .also {
@@ -79,16 +105,15 @@ class QrFragment : Fragment() {
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             val imageAnalyzer = ImageAnalysis.Builder()
+//                .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, QrCodeAnalyzer {qrCode ->
-                        Log.d("QrFragment", "QR found: $qrCode")
-                    })
+                    it.setAnalyzer(cameraExecutor, QrCodeAnalyzer {qrCode -> onQrDetected(qrCode)})
                 }
 
             try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
+                cameraProvider?.unbindAll()
+                cameraProvider?.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalyzer
                 )
 //            } catch (exc: com.google.zxing.NotFoundException) {
@@ -98,6 +123,12 @@ class QrFragment : Fragment() {
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
+    private fun stopCamera() {
+        previewView.post{
+            cameraProvider?.unbindAll()
+            }
     }
 
     private class QrCodeAnalyzer(private val onQrCodeDetected: (String) -> Unit) : ImageAnalysis.Analyzer {
@@ -138,8 +169,10 @@ class QrFragment : Fragment() {
 
                 val result = QRCodeMultiReader().decode(binaryBitmap)
                 onQrCodeDetected(result.text)
-            } catch (exc: com.google.zxing.NotFoundException) {
+            } catch (e: com.google.zxing.NotFoundException) {
                 // Ignore QR code not found
+            } catch (e: com.google.zxing.ChecksumException) {
+                // ignore checksum error
             } catch (e: Exception) {
                 Log.e("QrCodeAnalyzer", "Error analyzing QR code:", e)
             } finally {
@@ -162,8 +195,8 @@ class QrFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             QrFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+//                    putString(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
                 }
             }
     }
