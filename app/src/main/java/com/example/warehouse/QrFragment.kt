@@ -1,5 +1,7 @@
 package com.example.warehouse
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,7 +15,11 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.findNavController
@@ -38,6 +44,7 @@ import com.google.zxing.multi.qrcode.QRCodeMultiReader
  * Use the [QrFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class QrFragment : Fragment() {
     // TODO: Rename and change types of parameters
     // private var param1: String? = null
@@ -76,18 +83,28 @@ class QrFragment : Fragment() {
         Log.d("QrFragment", "QR found: $qrCode")
 
         // navigate to different fragments depending on whether QR is correct
-//        requireActivity().runOnUiThread {
-            if (qrCode.contains("A")) {
-                stopCamera()
-                Log.d("QrFragment", "Navigating to success fragment")
-                findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
-//                NavHostFragment.findNavController(this).navigate(R.id.action_QrFragment_to_SuccessFragment)
+        if (qrCode.contains("A")) {
+            stopCamera()
+            Log.d("QrFragment", "Navigating to success fragment")
+            findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+        } else {
+            // stopCamera()
+            // Log.d("QrFragment", "Navigating to failure fragment")
+            // findNavController().navigate(R.id.action_QrFragment_to_FailureFragment)
 
-            } else {
+            // create dialog warning about incorrect QR
+            Log.d("QrFragment", "Creating incorrect QR dialog")
+            activity?.runOnUiThread {
                 stopCamera()
-                Log.d("QrFragment", "Navigating to failure fragment")
-                findNavController().navigate(R.id.action_QrFragment_to_FailureFragment)
-//            }
+                val builder = AlertDialog.Builder(activity, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                builder.setTitle("Scan error")
+                    .setMessage("Incorrect QR code. Please try again.")
+                    .setPositiveButton("Retry") { dialog, id ->
+                        // user tries again
+                        startCamera()
+                    }
+                builder.create().show()
+            }
         }
     }
 
