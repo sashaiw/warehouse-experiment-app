@@ -2,10 +2,10 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditTextPreference
-        android:key="server_url"
+        android:key="@string/server_url_key"
+        android:defaultValue="@string/server_url_default_value"
         android:title="Server URL"
         app:useSimpleSummaryProvider="true"
         android:dialogTitle="Server URL"
-        android:dialogMessage="e.g. http://10.10.10.145:5000"
-        android:defaultValue="http://10.10.10.145:5000"/>
+        android:dialogMessage="e.g. http://10.10.10.145:5000" />
 </androidx.preference.PreferenceScreen>

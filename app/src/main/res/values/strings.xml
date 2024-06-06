@@ -11,4 +11,5 @@
     <string name="title_activity_qr">QrActivity</string>
 
     <string name="server_url_key">server_url</string>
+    <string name="server_url_default_value">http://10.10.10.145:5000</string>
 </resources>

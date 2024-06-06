@@ -1,9 +1,9 @@
-package com.example.warehouse
+package com.example.warehouse.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
-import androidx.navigation.findNavController
+import com.example.warehouse.R
 
 class QrActivity : AppCompatActivity() {
 

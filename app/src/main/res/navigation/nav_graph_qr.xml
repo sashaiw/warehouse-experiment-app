@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/QrFragment"
-        android:name="com.example.warehouse.QrFragment"
+        android:name="com.example.warehouse.ui.QrFragment"
         android:label="QR Scanner"
         tools:layout="@layout/fragment_qr">
 
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/SuccessFragment"
-        android:name="com.example.warehouse.SuccessFragment"
+        android:name="com.example.warehouse.ui.SuccessFragment"
         android:label="Success"
         tools:layout="@layout/fragment_success">
 
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/FailureFragment"
-        android:name="com.example.warehouse.FailureFragment"
+        android:name="com.example.warehouse.ui.FailureFragment"
         android:label="Failure"
         tools:layout="@layout/fragment_failure">
 

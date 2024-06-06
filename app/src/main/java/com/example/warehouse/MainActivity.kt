@@ -11,16 +11,21 @@ import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import com.example.warehouse.databinding.ActivityMainBinding
 import android.Manifest
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.util.Log
 
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceManager
 
 private const val REQUEST_CAMERA_PERMISSION = 10
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
 
         requestCameraPermission()
     }
