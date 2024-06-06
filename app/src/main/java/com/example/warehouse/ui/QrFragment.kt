@@ -1,43 +1,29 @@
-package com.example.warehouse
+package com.example.warehouse.ui
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.example.warehouse.R
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.LuminanceSource
+import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import com.google.zxing.multi.qrcode.QRCodeMultiReader
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
-import com.google.zxing.PlanarYUVLuminanceSource
-import com.google.zxing.multi.qrcode.QRCodeMultiReader
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -148,7 +134,8 @@ class QrFragment : Fragment() {
             }
     }
 
-    private class QrCodeAnalyzer(private val onQrCodeDetected: (String) -> Unit) : ImageAnalysis.Analyzer {
+    private class QrCodeAnalyzer(private val onQrCodeDetected: (String) -> Unit) :
+        ImageAnalysis.Analyzer {
         override fun analyze(image: ImageProxy) {
 //            if (image.format != ImageFormat.YUV_420_888) {
 //                image.close()
