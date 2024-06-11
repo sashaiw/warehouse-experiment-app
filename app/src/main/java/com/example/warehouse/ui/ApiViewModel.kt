@@ -3,33 +3,46 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.warehouse.network.ApiRepository
 import com.example.warehouse.model.Goal
+import com.example.warehouse.model.Result
 import kotlinx.coroutines.launch
 
 class ApiViewModel(private val repository: ApiRepository) : ViewModel() {
-    private val _currentGoal = MutableLiveData<Goal?>()
-    val currentGoal: LiveData<Goal?> get() = _currentGoal
+    private val _currentGoal = MutableLiveData<Result<Goal?>>()
+    val currentGoal: LiveData<Result<Goal?>> get() = _currentGoal
 
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
-
-    private val _success = MutableLiveData<Boolean?>()
-    val success: LiveData<Boolean?> get() = _success
+    private val _result = MutableLiveData<Result<Unit>>()
+    val result: LiveData<Result<Unit>> get() = _result
 
     fun fetchCurrentGoal() {
         viewModelScope.launch {
-            _currentGoal.value = repository.getCurrentGoal()
+            try {
+                val goal = repository.getCurrentGoal()
+                _currentGoal.value = Result.Success(goal)
+            } catch (e: Exception) {
+                _currentGoal.value = Result.Error(e)
+            }
         }
     }
 
     fun startGoal() {
         viewModelScope.launch() {
-            repository.startGoal()
+            try {
+                repository.startGoal()
+                _result.value = Result.Success(Unit)
+            } catch (e: Exception) {
+                _result.value = Result.Error(e)
+            }
         }
     }
 
     fun completeGoal() {
         viewModelScope.launch {
-            repository.completeGoal()
+            try {
+                repository.completeGoal()
+                _result.value = Result.Success(Unit)
+            } catch (e: Exception) {
+                _result.value = Result.Error(e)
+            }
         }
     }
 
@@ -37,16 +50,11 @@ class ApiViewModel(private val repository: ApiRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 Log.d("ApiViewModel", "Begin experiment")
-                _success.value = repository.beginExperiment()
+                repository.beginExperiment()
+                _result.value = Result.Success(Unit)
             } catch (e: Exception) {
-                handleError(e)
-                _success.value = false
+                _result.value = Result.Error(e)
             }
         }
-    }
-
-    private fun handleError(e: Exception) {
-        Log.e("ApiViewModel", "API error: ${e.message}")
-        _errorMessage.value = "API error: ${e.message}"
     }
 }

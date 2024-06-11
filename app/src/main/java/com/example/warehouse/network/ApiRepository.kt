@@ -26,51 +26,30 @@ class ApiRepository(context: Context) {
 
     suspend fun getCurrentGoal(): Goal? {
         Log.d("ApiRepository", "Getting current goal from /goal/current...")
-        return try {
-            val response: HttpResponse = client.get("${getBaseUrl()}/goal/current")
-            if (response.status.isSuccess()) {
-                val json = response.bodyAsText()
-                Log.d("ApiRepository", "Request succeeded")
-                Json.decodeFromString<Goal>(json)
-            } else {
-                Log.d("ApiRepository", "Response code: ${response.status}")
-                null
-            }
-        } catch (e: Exception) {
-            // TODO: error handling
-            Log.e("ApiRepository", "API error: ${e.message}")
+        val response: HttpResponse = client.get("${getBaseUrl()}/goal/current")
+        return if (response.status.isSuccess()) {
+            val json = response.bodyAsText()
+            Log.d("ApiRepository", "Request succeeded")
+            Json.decodeFromString<Goal>(json)
+        } else {
+            Log.d("ApiRepository", "Response code: ${response.status}")
             null
         }
     }
 
     suspend fun startGoal() {
-        try {
-            Log.d("ApiRepository", "Reporting started goal with /goal/started...")
-            client.post("${getBaseUrl()}/goal/started")
-        } catch (e: Exception) {
-            Log.e("ApiRepository", "API error: ${e.message}")
-            // TODO: error handling
-        }
+        Log.d("ApiRepository", "Reporting started goal with /goal/started...")
+        client.post("${getBaseUrl()}/goal/started")
     }
 
     suspend fun completeGoal() {
-        try {
-            Log.d("ApiRepository", "Reporting completed goal with /goal/completed...")
-            client.post("${getBaseUrl()}/goal/completed")
-        } catch (e: Exception) {
-            Log.e("ApiRepository", "API error: ${e.message}")
-            // TODO: error handling
-        }
+        Log.d("ApiRepository", "Reporting completed goal with /goal/completed...")
+        client.post("${getBaseUrl()}/goal/completed")
     }
 
     suspend fun beginExperiment(): Boolean {
-        try {
-            Log.d("ApiRepository", "Initializing experiment with /experiment/begin...")
-            client.post("${getBaseUrl()}/experiment/begin")
-            return true
-        } catch (e: Exception) {
-            Log.e("ApiRepository", "API error: ${e.message}")
-            return false
-        }
+        Log.d("ApiRepository", "Initializing experiment with /experiment/begin...")
+        client.post("${getBaseUrl()}/experiment/begin")
+        return true
     }
 }
