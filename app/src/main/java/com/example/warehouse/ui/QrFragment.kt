@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -14,6 +15,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.warehouse.R
@@ -24,6 +26,9 @@ import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.multi.qrcode.QRCodeMultiReader
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
+import com.example.warehouse.model.Goal
+import com.example.warehouse.model.Result
 
 /**
  * A simple [Fragment] subclass.
@@ -40,6 +45,11 @@ class QrFragment : Fragment() {
     private lateinit var previewView: PreviewView
     private var cameraProvider: ProcessCameraProvider? = null
     private var navController: NavController? = null
+
+    private lateinit var viewModel: ApiViewModel
+
+    private var currentGoalId: String? = null
+    private var currentGoalLabel: String? = null
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
@@ -62,15 +72,53 @@ class QrFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, ApiViewModelFactory(requireContext()))
+            .get(ApiViewModel::class.java)
+
+        viewModel.currentGoal.observe(viewLifecycleOwner) { currentGoal ->
+            when (currentGoal) {
+                is Result.Success -> {
+                    currentGoalId = currentGoal.data?.id
+                    currentGoalLabel = currentGoal.data?.label
+                    view.findViewById<TextView>(R.id.stationId).text = currentGoal.data?.id.toString()
+                }
+                is Result.Error -> {
+                    _handleError(currentGoal.toString())
+                }
+                Result.Loading -> TODO()
+            }
+        }
+
+        viewModel.fetchCurrentGoal()
+        viewModel.startGoal()
         startCamera()
+    }
+
+    private fun _handleError(errorMsg: String) {
+        val builder = AlertDialog.Builder(activity, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        builder
+            .setTitle("Experiment error")
+            .setMessage("""There was an error with the app. Please notify an experimenter.
+                |
+                |Error details:
+                |${errorMsg}
+            """.trimMargin())
+            .setPositiveButton("Okay") { dialog, id ->
+                // user tries again
+            }
+        builder.create().show()
     }
 
     private fun onQrDetected(qrCode: String) {
         Log.d("QrFragment", "QR found: $qrCode")
 
         // navigate to different fragments depending on whether QR is correct
-        if (qrCode.contains("A")) {
+        if (qrCode == currentGoalId) {
             stopCamera()
+
+            viewModel.completeGoal()
+
             Log.d("QrFragment", "Navigating to success fragment")
             findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
         } else {
