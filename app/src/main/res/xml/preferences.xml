@@ -8,4 +8,11 @@
         app:useSimpleSummaryProvider="true"
         android:dialogTitle="Server URL"
         android:dialogMessage="e.g. http://10.10.10.145:5000" />
+
+    <EditTextPreference
+        android:key="@string/participant_id_key"
+        android:defaultValue="@string/participant_id_default_value"
+        android:title="Participant ID"
+        app:useSimpleSummaryProvider="true"
+        android:dialogTitle="Participant ID"/>
 </androidx.preference.PreferenceScreen>

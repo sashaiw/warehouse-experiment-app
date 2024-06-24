@@ -10,6 +10,8 @@
     <string name="previous">Previous</string>
     <string name="title_activity_qr">QrActivity</string>
 
-    <string name="server_url_key">server_url</string>
     <string name="server_url_default_value">http://10.10.10.145:5000</string>
+    <string name="server_url_key">server_url</string>
+    <string name="participant_id_key">participant_id</string>
+    <string name="participant_id_default_value">test</string>
 </resources>
