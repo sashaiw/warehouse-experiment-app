@@ -13,11 +13,15 @@
 
         <action
             android:id="@+id/action_QrFragment_to_SuccessFragment"
-            app:destination="@id/SuccessFragment" />
+            app:destination="@id/SuccessFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_QrFragment_to_FailureFragment"
-            app:destination="@id/FailureFragment" />
+            app:destination="@id/FailureFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -28,7 +32,9 @@
 
         <action
             android:id="@+id/action_SuccessFragment_to_QrFragment"
-            app:destination="@id/QrFragment" />
+            app:destination="@id/QrFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -39,6 +45,8 @@
 
         <action
             android:id="@+id/action_FailureFragment_to_QrFragment"
-            app:destination="@id/QrFragment" />
+            app:destination="@id/QrFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

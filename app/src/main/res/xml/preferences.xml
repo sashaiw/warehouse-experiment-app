@@ -14,5 +14,12 @@
         android:defaultValue="@string/participant_id_default_value"
         android:title="Participant ID"
         app:useSimpleSummaryProvider="true"
-        android:dialogTitle="Participant ID"/>
+        android:dialogTitle="Participant ID" />
+
+    <ListPreference
+        android:key="@string/condition_key"
+        android:title="Condition"
+        android:entries="@array/condition_labels"
+        android:entryValues="@array/condition_values"
+        android:defaultValue="control" />
 </androidx.preference.PreferenceScreen>

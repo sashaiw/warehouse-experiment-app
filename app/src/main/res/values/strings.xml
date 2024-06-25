@@ -14,4 +14,13 @@
     <string name="server_url_key">server_url</string>
     <string name="participant_id_key">participant_id</string>
     <string name="participant_id_default_value">test</string>
+    <string name="condition_key">condition</string>
+
+    <string name="condition_label_control">Control</string>
+    <string name="condition_label_static">Static light</string>
+    <string name="condition_label_projector">Projected path</string>
+
+    <string name="condition_value_control">control</string>
+    <string name="condition_value_static">static_light</string>
+    <string name="condition_value_projector">projected_path</string>
 </resources>

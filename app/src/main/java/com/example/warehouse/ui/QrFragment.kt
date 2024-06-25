@@ -119,8 +119,10 @@ class QrFragment : Fragment() {
 
             viewModel.completeGoal()
 
-            Log.d("QrFragment", "Navigating to success fragment")
-            findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+            activity?.runOnUiThread {
+                Log.d("QrFragment", "Navigating to success fragment")
+                findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+            }
         } else {
             // stopCamera()
             // Log.d("QrFragment", "Navigating to failure fragment")

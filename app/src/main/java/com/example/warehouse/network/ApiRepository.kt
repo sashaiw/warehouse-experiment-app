@@ -7,7 +7,7 @@ import androidx.preference.PreferenceManager
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import com.example.warehouse.model.Goal
-import com.example.warehouse.model.Participant
+import com.example.warehouse.model.Experiment
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -30,6 +30,12 @@ class ApiRepository(context: Context) {
         return participantId
     }
 
+    private fun getCondition(): String {
+        val condition: String = sharedPreferences.getString("condition", "control")
+            ?: throw Exception("Could not get condition from settings")
+        return condition
+    }
+
     suspend fun getCurrentGoal(): Goal? {
         Log.d("ApiRepository", "Getting current goal from /goal/current...")
         val response: HttpResponse = client.get("${getBaseUrl()}/goal/current")
@@ -45,19 +51,28 @@ class ApiRepository(context: Context) {
 
     suspend fun startGoal() {
         Log.d("ApiRepository", "Reporting started goal with /goal/started...")
-        client.post("${getBaseUrl()}/goal/started")
+        val response: HttpResponse = client.post("${getBaseUrl()}/goal/started")
+        if (!response.status.isSuccess()) {
+            throw Exception("${response.status}: ${response.bodyAsText()}")
+        }
     }
 
     suspend fun completeGoal() {
         Log.d("ApiRepository", "Reporting completed goal with /goal/completed...")
-        client.post("${getBaseUrl()}/goal/completed")
+        val response: HttpResponse = client.post("${getBaseUrl()}/goal/completed")
+        if (!response.status.isSuccess()) {
+            throw Exception("${response.status}: ${response.bodyAsText()}")
+        }
     }
 
     suspend fun beginExperiment(): Boolean {
         Log.d("ApiRepository", "Initializing experiment with /experiment/begin...")
-        client.post("${getBaseUrl()}/experiment/begin") {
+        val response: HttpResponse = client.post("${getBaseUrl()}/experiment/begin") {
             contentType(ContentType.Application.Json)
-            setBody(Participant(id=getParticipantId()))
+            setBody(Experiment(id=getParticipantId(), condition=getCondition()))
+        }
+        if (!response.status.isSuccess()) {
+            throw Exception("${response.status}: ${response.bodyAsText()}")
         }
         return true
     }
