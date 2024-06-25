@@ -16,6 +16,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.warehouse.R
@@ -29,6 +30,7 @@ import java.util.concurrent.Executors
 
 import com.example.warehouse.model.Goal
 import com.example.warehouse.model.Result
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -70,6 +72,21 @@ class QrFragment : Fragment() {
         return view
     }
 
+    private suspend fun completeGoalAndNavigate() {
+        viewModel.completeGoal()
+        viewModel.result.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> {
+                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+                    }
+                is Result.Error -> {
+                    _handleError(result.toString())
+                }
+                Result.Loading -> TODO()
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -91,7 +108,9 @@ class QrFragment : Fragment() {
         }
 
         viewModel.fetchCurrentGoal()
-        viewModel.startGoal()
+        lifecycleScope.launch {
+            viewModel.startGoal()
+        }
         startCamera()
     }
 
@@ -117,7 +136,9 @@ class QrFragment : Fragment() {
         if (qrCode == currentGoalId) {
             stopCamera()
 
-            viewModel.completeGoal()
+            lifecycleScope.launch {
+                completeGoalAndNavigate()
+            }
 
             activity?.runOnUiThread {
                 Log.d("QrFragment", "Navigating to success fragment")
