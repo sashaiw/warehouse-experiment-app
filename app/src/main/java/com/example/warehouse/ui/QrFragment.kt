@@ -90,6 +90,8 @@ class QrFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("QrFragment", "onViewCreated")
+
         viewModel = ViewModelProvider(this, ApiViewModelFactory(requireContext()))
             .get(ApiViewModel::class.java)
 

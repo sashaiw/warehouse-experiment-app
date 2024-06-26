@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
+    android:id="@+id/nav_graph_qr"
     app:startDestination="@id/QrFragment">
 
     <fragment
@@ -14,13 +14,13 @@
         <action
             android:id="@+id/action_QrFragment_to_SuccessFragment"
             app:destination="@id/SuccessFragment"
-            app:popUpTo="@id/nav_graph"
+            app:popUpTo="@id/nav_graph_main"
             app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_QrFragment_to_FailureFragment"
             app:destination="@id/FailureFragment"
-            app:popUpTo="@id/nav_graph"
+            app:popUpTo="@id/nav_graph_main"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -33,7 +33,7 @@
         <action
             android:id="@+id/action_SuccessFragment_to_QrFragment"
             app:destination="@id/QrFragment"
-            app:popUpTo="@id/nav_graph"
+            app:popUpTo="@id/nav_graph_main"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -46,7 +46,7 @@
         <action
             android:id="@+id/action_FailureFragment_to_QrFragment"
             app:destination="@id/QrFragment"
-            app:popUpTo="@id/nav_graph"
+            app:popUpTo="@id/nav_graph_main"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>
