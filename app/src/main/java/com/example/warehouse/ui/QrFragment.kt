@@ -144,7 +144,9 @@ class QrFragment : Fragment() {
 
             activity?.runOnUiThread {
                 Log.d("QrFragment", "Navigating to success fragment")
-                findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+                if (findNavController().currentDestination?.id != R.id.SuccessFragment) {
+                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+                }
             }
         } else {
             // stopCamera()
