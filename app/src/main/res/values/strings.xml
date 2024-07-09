@@ -23,4 +23,6 @@
     <string name="condition_value_control">control</string>
     <string name="condition_value_static">static_light</string>
     <string name="condition_value_projector">projected_path</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

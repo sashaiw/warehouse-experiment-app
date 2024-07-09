@@ -14,13 +14,19 @@
         <action
             android:id="@+id/action_QrFragment_to_SuccessFragment"
             app:destination="@id/SuccessFragment"
-            app:popUpTo="@id/nav_graph_main"
+            app:popUpTo="@id/nav_graph_qr"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_QrFragment_to_CompletedFragment"
+            app:destination="@id/completedFragment"
+            app:popUpTo="@id/nav_graph_qr"
             app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_QrFragment_to_FailureFragment"
             app:destination="@id/FailureFragment"
-            app:popUpTo="@id/nav_graph_main"
+            app:popUpTo="@id/nav_graph_qr"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -33,7 +39,7 @@
         <action
             android:id="@+id/action_SuccessFragment_to_QrFragment"
             app:destination="@id/QrFragment"
-            app:popUpTo="@id/nav_graph_main"
+            app:popUpTo="@id/nav_graph_qr"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -46,7 +52,12 @@
         <action
             android:id="@+id/action_FailureFragment_to_QrFragment"
             app:destination="@id/QrFragment"
-            app:popUpTo="@id/nav_graph_main"
+            app:popUpTo="@id/nav_graph_qr"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/completedFragment"
+        android:name="com.example.warehouse.ui.CompletedFragment"
+        android:label="fragment_completed"
+        tools:layout="@layout/fragment_completed" />
 </navigation>

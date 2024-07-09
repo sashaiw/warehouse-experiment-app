@@ -34,7 +34,7 @@ class FailureFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nextButton: Button = view.findViewById(R.id.retryButton)
+        val nextButton: Button = view.findViewById(R.id.resetButton)
         nextButton.setOnClickListener {onNextButtonClicked()}
     }
 

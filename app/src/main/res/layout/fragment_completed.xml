@@ -5,8 +5,8 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/failure"
-    tools:context=".ui.SuccessFragment">
+    android:background="@color/completed"
+    tools:context=".ui.CompletedFragment">
 
     <TextView
         android:id="@+id/successText"
@@ -14,11 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="44dp"
-        android:text="Failure"
+        android:text="Experiment completed!"
         android:textAlignment="center"
-        android:textStyle="bold"
         android:textColor="@color/darkgrey"
         android:textSize="36dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="44dp"
-        android:text="Incorrect QR code"
+        android:text="Please notify an experimenter"
         android:textAlignment="center"
         android:textColor="@color/darkgrey"
         android:textSize="16dp"
@@ -47,7 +47,7 @@
         android:id="@+id/resetButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Retry"
+        android:text="Don't push this!"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

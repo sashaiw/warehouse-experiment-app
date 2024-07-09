@@ -5,5 +5,6 @@
 
     <color name="success">#FF9CD2B2</color>
     <color name="failure">#FFCB6D6D</color>
+    <color name="completed">#FF80E3DA</color>
     <color name="darkgrey">#FF151515</color>
 </resources>

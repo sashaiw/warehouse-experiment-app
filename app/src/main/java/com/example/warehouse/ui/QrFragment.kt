@@ -28,7 +28,6 @@ import com.google.zxing.multi.qrcode.QRCodeMultiReader
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-import com.example.warehouse.model.Goal
 import com.example.warehouse.model.Result
 import kotlinx.coroutines.launch
 
@@ -72,21 +71,6 @@ class QrFragment : Fragment() {
         return view
     }
 
-    private suspend fun completeGoalAndNavigate() {
-        viewModel.completeGoal()
-        viewModel.result.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Success -> {
-                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
-                    }
-                is Result.Error -> {
-                    _handleError(result.toString())
-                }
-                Result.Loading -> TODO()
-            }
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -100,10 +84,16 @@ class QrFragment : Fragment() {
                 is Result.Success -> {
                     currentGoalId = currentGoal.data?.id
                     currentGoalLabel = currentGoal.data?.label
-                    view.findViewById<TextView>(R.id.stationId).text = currentGoal.data?.id.toString()
+                    view.findViewById<TextView>(R.id.stationId).text = currentGoal.data?.label.toString()
+
+                    if (currentGoalId == "none") {
+                        if (findNavController().currentDestination?.id != R.id.completedFragment) {
+                            findNavController().navigate(R.id.action_QrFragment_to_CompletedFragment)
+                        }
+                    }
                 }
                 is Result.Error -> {
-                    _handleError(currentGoal.toString())
+                    handleError(currentGoal.toString())
                 }
                 Result.Loading -> TODO()
             }
@@ -116,7 +106,22 @@ class QrFragment : Fragment() {
         startCamera()
     }
 
-    private fun _handleError(errorMsg: String) {
+    private suspend fun completeGoalAndNavigate() {
+        viewModel.completeGoal()
+        viewModel.result.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> {
+                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+                }
+                is Result.Error -> {
+                    handleError(result.toString())
+                }
+                Result.Loading -> TODO()
+            }
+        }
+    }
+
+    private fun handleError(errorMsg: String) {
         val builder = AlertDialog.Builder(activity, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
         builder
             .setTitle("Experiment error")
