@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.warehouse.R
@@ -29,6 +30,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 import com.example.warehouse.model.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -107,18 +110,30 @@ class QrFragment : Fragment() {
     }
 
     private suspend fun completeGoalAndNavigate() {
-        viewModel.completeGoal()
-        viewModel.result.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Success -> {
-                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
-                }
-                is Result.Error -> {
-                    handleError(result.toString())
-                }
-                Result.Loading -> TODO()
+        Log.d("QrFragment", "completeGoalAndNavigate")
+
+        when (val result = viewModel.completeGoal()) {
+            is Result.Success -> {
+                findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
             }
+            is Result.Error -> {
+                handleError(result.toString())
+            }
+            Result.Loading -> TODO()
         }
+
+//        viewModel.completeGoal()
+//        viewModel.result.observe(viewLifecycleOwner) { result ->
+//            when (result) {
+//                is Result.Success -> {
+//                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+//                }
+//                is Result.Error -> {
+//                    handleError(result.toString())
+//                }
+//                Result.Loading -> TODO()
+//            }
+//        }
     }
 
     private fun handleError(errorMsg: String) {
@@ -147,12 +162,12 @@ class QrFragment : Fragment() {
                 completeGoalAndNavigate()
             }
 
-            activity?.runOnUiThread {
-                Log.d("QrFragment", "Navigating to success fragment")
-                if (findNavController().currentDestination?.id != R.id.SuccessFragment) {
-                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
-                }
-            }
+//            activity?.runOnUiThread {
+//                Log.d("QrFragment", "Navigating to success fragment")
+//                if (findNavController().currentDestination?.id != R.id.SuccessFragment) {
+//                    findNavController().navigate(R.id.action_QrFragment_to_SuccessFragment)
+//                }
+//            }
         } else {
             // stopCamera()
             // Log.d("QrFragment", "Navigating to failure fragment")

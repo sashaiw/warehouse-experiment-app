@@ -4,7 +4,9 @@ import androidx.lifecycle.*
 import com.example.warehouse.network.ApiRepository
 import com.example.warehouse.model.Goal
 import com.example.warehouse.model.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ApiViewModel(private val repository: ApiRepository) : ViewModel() {
     private val _currentGoal = MutableLiveData<Result<Goal?>>()
@@ -24,25 +26,21 @@ class ApiViewModel(private val repository: ApiRepository) : ViewModel() {
         }
     }
 
-    fun startGoal() {
-        viewModelScope.launch() {
-            try {
-                repository.startGoal()
-                _result.value = Result.Success(Unit)
-            } catch (e: Exception) {
-                _result.value = Result.Error(e)
-            }
+    suspend fun startGoal(): Result<Unit> {
+        return try {
+            repository.startGoal()
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(e)
         }
     }
 
-    fun completeGoal() {
-        viewModelScope.launch {
-            try {
-                repository.completeGoal()
-                _result.value = Result.Success(Unit)
-            } catch (e: Exception) {
-                _result.value = Result.Error(e)
-            }
+    suspend fun completeGoal(): Result<Unit> {
+        return try {
+            repository.completeGoal()
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(e)
         }
     }
 

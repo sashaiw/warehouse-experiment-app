@@ -85,6 +85,9 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.11")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.11")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.11")
+
+    // ViewModelScope
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

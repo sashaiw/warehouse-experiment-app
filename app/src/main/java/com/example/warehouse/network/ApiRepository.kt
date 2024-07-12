@@ -60,6 +60,7 @@ class ApiRepository(context: Context) {
     suspend fun completeGoal() {
         Log.d("ApiRepository", "Reporting completed goal with /goal/completed...")
         val response: HttpResponse = client.post("${getBaseUrl()}/goal/completed")
+        Log.d("ApiRepository", "/goal/completed request completed")
         if (!response.status.isSuccess()) {
             throw Exception("${response.status}: ${response.bodyAsText()}")
         }
