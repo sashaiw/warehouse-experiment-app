@@ -17,7 +17,7 @@
         android:text="Experiment completed!"
         android:textAlignment="center"
         android:textColor="@color/darkgrey"
-        android:textSize="36dp"
+        android:textSize="32dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
 "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/successText"
-        app:layout_constraintVertical_bias="0.15" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <Button
         android:id="@+id/resetButton"

@@ -82,9 +82,15 @@ class QrFragment : Fragment() {
         viewModel = ViewModelProvider(this, ApiViewModelFactory(requireContext()))
             .get(ApiViewModel::class.java)
 
+        val loadingScreen = view.findViewById<View>(R.id.loading_screen)
+        loadingScreen?.visibility = View.VISIBLE
+
         viewModel.currentGoal.observe(viewLifecycleOwner) { currentGoal ->
             when (currentGoal) {
                 is Result.Success -> {
+                    // hide loading screen
+                    loadingScreen?.visibility = View.GONE
+
                     currentGoalId = currentGoal.data?.id
                     currentGoalLabel = currentGoal.data?.label
                     view.findViewById<TextView>(R.id.stationId).text = currentGoal.data?.label.toString()
@@ -98,7 +104,9 @@ class QrFragment : Fragment() {
                 is Result.Error -> {
                     handleError(currentGoal.toString())
                 }
-                Result.Loading -> TODO()
+                Result.Loading -> {
+                    loadingScreen?.visibility = View.VISIBLE
+                }
             }
         }
 
