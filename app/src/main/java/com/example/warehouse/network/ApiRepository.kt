@@ -12,6 +12,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 
 class ApiRepository(context: Context) {
@@ -38,14 +39,22 @@ class ApiRepository(context: Context) {
 
     suspend fun getCurrentGoal(): Goal? {
         Log.d("ApiRepository", "Getting current goal from /goal/current...")
-        val response: HttpResponse = client.get("${getBaseUrl()}/goal/current")
-        return if (response.status.isSuccess()) {
-            val json = response.bodyAsText()
-            Log.d("ApiRepository", "Request succeeded")
-            Json.decodeFromString<Goal>(json)
-        } else {
-            Log.d("ApiRepository", "Response code: ${response.status}")
-            null
+
+        while (true) {
+            val response: HttpResponse = client.get("${getBaseUrl()}/goal/current")
+            if (response.status.isSuccess()) {
+                if (response.status.value == 204) {
+                    Log.d("ApiRepository", "No current goal")
+                    delay(100)
+                    continue
+                }
+                val json = response.bodyAsText()
+                Log.d("ApiRepository", "Request succeeded")
+                return Json.decodeFromString<Goal>(json)
+            } else {
+                Log.d("ApiRepository", "Response code: ${response.status}")
+                return null
+            }
         }
     }
 
